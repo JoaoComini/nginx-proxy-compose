@@ -1,0 +1,45 @@
+version: '3.9'
+
+services:
+  nginx-proxy:
+    restart: unless-stopped
+    image: "nginxproxy/nginx-proxy:${NGINX_PROXY_IMAGE_TAG}"
+    networks:
+      - nginx-proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    labels:
+      - "com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - certs:/etc/nginx/certs
+      - vhost:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+
+  acme-companion:
+    restart: unless-stopped
+    image: nginxproxy/acme-companion
+    networks:
+      - nginx-proxy
+    depends_on:
+      - nginx-proxy
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - certs:/etc/nginx/certs
+      - vhost:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+      - acme:/etc/acme.sh
+    environment:
+      DEFAULT_EMAIL: ${LETSENCRYPT_DEFAULT_EMAIL}
+
+volumes:
+  certs:
+  vhost:
+  html:
+  acme:
+
+networks:
+  nginx-proxy:
+    name: nginx-proxy
+    external: false
