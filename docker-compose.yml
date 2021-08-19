@@ -3,7 +3,7 @@ version: '3.9'
 services:
   nginx-proxy:
     restart: unless-stopped
-    build: .
+    image: nginxproxy/nginx-proxy:alpine
     networks:
       - nginx-proxy
     ports:
@@ -15,8 +15,7 @@ services:
       - /var/run/docker.sock:/tmp/docker.sock
       - certs:/etc/nginx/certs
       - html:/usr/share/nginx/html
-      - ./vhost.d:/etc/nginx/vhost.d:ro
-      - /var/www:/var/www
+      - vhost:/etc/nginx/vhost.d:ro
 
   acme-companion:
     restart: unless-stopped
@@ -28,7 +27,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - certs:/etc/nginx/certs
-      - ./vhost.d:/etc/nginx/vhost.d
+      - vhost:/etc/nginx/vhost.d
       - html:/usr/share/nginx/html
       - acme:/etc/acme.sh
     environment:
@@ -38,6 +37,7 @@ volumes:
   certs:
   html:
   acme:
+  vhost:
 
 networks:
   nginx-proxy:
