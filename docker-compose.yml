@@ -3,7 +3,7 @@ version: '3.9'
 services:
   nginx-proxy:
     restart: unless-stopped
-    image: nginxproxy/nginx-proxy:alpine
+    image: nginxproxy/nginx-proxy:${NGINX_PROXY_IMAGE_TAG}
     networks:
       - nginx-proxy
     ports:
