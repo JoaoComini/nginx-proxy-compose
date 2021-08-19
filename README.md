@@ -13,7 +13,7 @@ Then change the environment variables inside `.env` file as you need.
 
 Run it with `docker-compose`:
 ```bash
-$ docker-compose up -d
+$ docker-compose up -d --build
 ```
 
 Start proxied containers:

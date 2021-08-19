@@ -3,7 +3,7 @@ version: '3.9'
 services:
   nginx-proxy:
     restart: unless-stopped
-    image: "nginxproxy/nginx-proxy:${NGINX_PROXY_IMAGE_TAG}"
+    build: .
     networks:
       - nginx-proxy
     ports:
@@ -12,10 +12,10 @@ services:
     labels:
       - "com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy"
     volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - /var/run/docker.sock:/tmp/docker.sock
       - certs:/etc/nginx/certs
-      - vhost:/etc/nginx/vhost.d
       - html:/usr/share/nginx/html
+      - ./vhost.d:/etc/nginx/vhost.d:ro
 
   acme-companion:
     restart: unless-stopped
@@ -27,7 +27,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - certs:/etc/nginx/certs
-      - vhost:/etc/nginx/vhost.d
+      - ./vhost.d:/etc/nginx/vhost.d
       - html:/usr/share/nginx/html
       - acme:/etc/acme.sh
     environment:
@@ -35,7 +35,6 @@ services:
 
 volumes:
   certs:
-  vhost:
   html:
   acme:
 
