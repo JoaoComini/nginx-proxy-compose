@@ -16,6 +16,7 @@ services:
       - certs:/etc/nginx/certs
       - html:/usr/share/nginx/html
       - ./vhost.d:/etc/nginx/vhost.d:ro
+      - /var/www:/var/www
 
   acme-companion:
     restart: unless-stopped
